@@ -17,24 +17,13 @@ st.write(
 name_on_order = st.text_input("Name on Smoothie:")
 st.write("The Name on your Smoothie will be:",name_on_order)
 
-# option = st.selectbox("What is your favourite fruit?",
-#                       ('Banana','Strawberries','Peaches'))
-
-# st.write("Your favourite fruit is:",option)
-
-#session = get_active_session()
 my_dataframe = session.table("smoothies.public.fruit_options").select(col('fruit_name'),col('search_on'))
-# st.dataframe(data=my_dataframe, use_container_width=True)
-# st.stop()
 
 pd_df = my_dataframe.to_pandas()
-# st.dataframe(pd_df)
-# st.stop()
 
 ingredient_list = st.multiselect('choose upto 5 ingredients:',my_dataframe,max_selections=5)
 ingredients_string =''
-if ingredient_list:   
-
+if ingredient_list:
   for fruit_chosen in ingredient_list:
     ingredients_string += fruit_chosen + ' '
     search_on = pd_df.loc[pd_df['FRUIT_NAME'] ==  fruit_chosen,'SEARCH_ON'].iloc[0]
@@ -42,7 +31,6 @@ if ingredient_list:
     st.subheader(fruit_chosen + ' Nutrition Information')
     smoothiefroot_response = requests.get(f"https://my.smoothiefroot.com/api/fruit/{search_on}")
     sf_df = st.dataframe(data = smoothiefroot_response.json(), use_container_width=True)
-
   st.write(ingredients_string)
 
 my_insert_stmt = """ insert into smoothies.public.orders(ingredients,name_on_order)
