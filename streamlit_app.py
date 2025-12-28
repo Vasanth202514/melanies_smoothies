@@ -18,7 +18,6 @@ name_on_order = st.text_input("Name on Smoothie:")
 st.write("The Name on your Smoothie will be:",name_on_order)
 
 my_dataframe = session.table("smoothies.public.fruit_options").select(col('fruit_name'),col('search_on'))
-
 pd_df = my_dataframe.to_pandas()
 
 ingredient_list = st.multiselect('choose upto 5 ingredients:',my_dataframe,max_selections=5)
