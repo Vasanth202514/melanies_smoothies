@@ -27,9 +27,8 @@ my_dataframe = session.table("smoothies.public.fruit_options").select(col('fruit
 #st.dataframe(data=my_dataframe, use_container_width=True)
 
 ingredient_list = st.multiselect('choose upto 5 ingredients:',my_dataframe)
-
-if ingredient_list:
-  ingredients_string =''    
+ingredients_string =''
+if ingredient_list:   
 
   for fruit_chosen in ingredient_list:
       ingredients_string += fruit_chosen + ' '
