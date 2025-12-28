@@ -1,5 +1,6 @@
 # Import python packages
 import streamlit as st
+import requests
 #from snowflake.snowpark.context import get_active_session
 from snowflake.snowpark.functions import col
 
@@ -26,26 +27,21 @@ my_dataframe = session.table("smoothies.public.fruit_options").select(col('fruit
 #st.dataframe(data=my_dataframe, use_container_width=True)
 
 ingredient_list = st.multiselect('choose upto 5 ingredients:',my_dataframe)
-ingredients_string =''
+
 if ingredient_list:
-    # st.write(ingredient_list)
-    # st.text(ingredient_list)
-    
+  ingredients_string =''    
 
-    for fruit_chosen in ingredient_list:
-        ingredients_string += fruit_chosen
+  for fruit_chosen in ingredient_list:
+      ingredients_string += fruit_chosen + ' '
+      smoothiefroot_response = requests.get("https://my.smoothiefroot.com/api/fruit/watermelon")
+      sf_df = st.dataframe(data = smoothiefroot_response.json()), use_container_width=True)
 
-    st.write(ingredients_string)
+  st.write(ingredients_string)
 
 my_insert_stmt = """ insert into smoothies.public.orders(ingredients,name_on_order)
             values ('""" + ingredients_string + """','"""+name_on_order+"""')"""
 
 time_to_insert = st.button("Submit Order")
-
-import requests
-smoothiefroot_response = requests.get("https://my.smoothiefroot.com/api/fruit/watermelon")
-#st.text(smoothiefroot_response.json())
-sf_df = st.dataframe(data = smoothiefroot_response.json()), use_container_width=True)
 
 if time_to_insert:
     session.sql(my_insert_stmt).collect()
